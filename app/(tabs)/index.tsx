@@ -8,18 +8,16 @@ import { useWishStore } from '../../store/wishStore';
 import HabitRing from '../../components/HabitRing';
 import TaskItem from '../../components/TaskItem';
 import { COLORS } from '../../constants/colors';
-import { todayISO, tomorrowISO, formatGreeting, formatDate } from '../../utils/dateHelpers';
+import { todayISO, formatGreeting, formatDate } from '../../utils/dateHelpers';
 
 export default function TodayScreen() {
   const router = useRouter();
   const { habits, toggleCompletion, getStreak } = useHabitStore();
   const { toggleTask, deleteTask, getTodayTasks, getOverdueTasks } = useTaskStore();
-  const [tomorrowOpen, setTomorrowOpen] = useState(false);
   const [wishInput, setWishInput] = useState('');
   const { items: wishItems, addItem, toggleItem, deleteItem } = useWishStore();
 
   const today = todayISO();
-  const tomorrow = tomorrowISO();
   const todayTasks = getTodayTasks();
   const overdueTasks = getOverdueTasks();
 
@@ -158,38 +156,6 @@ export default function TodayScreen() {
         )}
       </View>
 
-      {/* 明日の習慣 */}
-      {habits.length > 0 && (
-        <View style={styles.section}>
-          <TouchableOpacity
-            style={styles.sectionHeader}
-            onPress={() => setTomorrowOpen((v) => !v)}
-            activeOpacity={0.7}
-          >
-            <View>
-              <Text style={styles.sectionTitle}>明日の習慣 🌙</Text>
-              <Text style={styles.progress}>{formatDate(tomorrow)}</Text>
-            </View>
-            <Text style={styles.chevron}>{tomorrowOpen ? '▲' : '▼'}</Text>
-          </TouchableOpacity>
-
-          {tomorrowOpen && (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.rings}>
-              {habits.map((h) => (
-                <HabitRing
-                  key={h.id}
-                  name={h.name}
-                  icon={h.icon}
-                  color={h.completions.includes(tomorrow) ? h.color : COLORS.border}
-                  done={h.completions.includes(tomorrow)}
-                  streak={getStreak(h.id)}
-                  onPress={() => handleHabitPress(h.id, tomorrow)}
-                />
-              ))}
-            </ScrollView>
-          )}
-        </View>
-      )}
     </ScrollView>
   );
 }
@@ -205,7 +171,6 @@ const styles = StyleSheet.create({
   sectionTitle: { color: COLORS.text, fontSize: 18, fontWeight: '700' },
   progress: { color: COLORS.textSecondary, fontSize: 12, marginTop: 2 },
   addBtn: { color: COLORS.primary, fontSize: 14, fontWeight: '600' },
-  chevron: { color: COLORS.textSecondary, fontSize: 14 },
   rings: { flexDirection: 'row' },
   empty: { backgroundColor: COLORS.surface, borderRadius: 14, padding: 24, alignItems: 'center' },
   emptyIcon: { fontSize: 32, marginBottom: 8 },
