@@ -1,4 +1,4 @@
-import { startOfDay, subDays, isSameDay, isBefore, parseISO, format } from 'date-fns';
+import { startOfDay, subDays, addDays, isSameDay, isBefore, parseISO, format } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
 export function calculateStreak(completions: string[]): number {
@@ -38,6 +38,10 @@ export function calculateBestStreak(completions: string[]): number {
 
 export function todayISO(): string {
   return format(new Date(), 'yyyy-MM-dd');
+}
+
+export function tomorrowISO(): string {
+  return format(addDays(new Date(), 1), 'yyyy-MM-dd');
 }
 
 export function formatDate(iso: string): string {
